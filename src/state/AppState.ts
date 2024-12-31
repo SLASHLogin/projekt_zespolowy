@@ -1,16 +1,16 @@
-interface Participant {
+export interface Participant {
   id: string
   name: string
 }
 
-interface Currency {
+export interface Currency {
   code: string
   symbol: string
   name: string
   exchangeRate: number // kurs względem waluty głównej (PLN)
 }
 
-interface Expense {
+export interface Expense {
   id: string
   amount: number
   currency: string
