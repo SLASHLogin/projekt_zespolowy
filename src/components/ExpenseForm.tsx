@@ -24,24 +24,27 @@ const ExpenseForm = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    if (formData.amount && formData.payer && formData.beneficiaries.length > 0) {
-      appState.addExpense({
-        amount: parseFloat(formData.amount),
-        currency: formData.currency,
-        payer: formData.payer,
-        beneficiaries: formData.beneficiaries,
-        description: formData.description
-      })
-      
-      // Resetowanie formularza
-      setFormData({
-        amount: '',
-        currency: 'PLN',
-        payer: '',
-        beneficiaries: [],
-        description: ''
-      })
+    if (!formData.amount || !formData.payer || formData.beneficiaries.length === 0) {
+      alert('Wypełnij wszystkie wymagane pola')
+      return
     }
+
+    appState.addExpense({
+      amount: parseFloat(formData.amount),
+      currency: formData.currency,
+      payer: formData.payer,
+      beneficiaries: formData.beneficiaries,
+      description: formData.description
+    })
+    
+    // Resetowanie formularza
+    setFormData({
+      amount: '',
+      currency: 'PLN',
+      payer: '',
+      beneficiaries: [],
+      description: ''
+    })
   }
 
   return (
