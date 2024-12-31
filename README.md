@@ -109,7 +109,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 ### 3. Implementacja logiki biznesowej
 
-- [ ] Utworzenie klasy zarządzającej stanem aplikacji
+- [x] Utworzenie klasy zarządzającej stanem aplikacji
 - [ ] Implementacja algorytmu obliczającego bilans należności
 - [ ] Dodanie obsługi wielu walut i ich przeliczania
 - [ ] Implementacja mechanizmu zapisywania stanu do pliku (JSON)
