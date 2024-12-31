@@ -100,7 +100,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 - [x] Zaprojektowanie i implementacja responsywnego layoutu strony
 - [x] Utworzenie formularza dodawania nowego wydatku z polami: kwota, płatnik, beneficjenci
-- [ ] Implementacja wielowalutowego wyboru przy dodawaniu wydatku
+- [x] Implementacja wielowalutowego wyboru przy dodawaniu wydatku
 - [ ] Utworzenie widoku listy wszystkich wydatków z możliwością edycji i usuwania
 - [ ] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
 - [ ] Dodanie modalnego okna do wprowadzania kursów walut
