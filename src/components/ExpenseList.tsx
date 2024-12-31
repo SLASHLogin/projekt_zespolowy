@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAppState } from '../state/AppContext'
 import { Expense } from '../state/AppState'
 
@@ -6,8 +6,16 @@ const ExpenseList = () => {
   const appState = useAppState()
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editForm, setEditForm] = useState<Partial<Expense>>({})
+  const [expenses, setExpenses] = useState<Expense[]>([])
 
-  const expenses = appState.getExpenses()
+  useEffect(() => {
+    setExpenses(appState.getExpenses())
+    const unsubscribe = appState.subscribe(() => {
+      setExpenses(appState.getExpenses())
+    })
+    return unsubscribe
+  }, [appState])
+
   const currencies = appState.getCurrencies()
   const participants = appState.getParticipants()
 

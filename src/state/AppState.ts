@@ -20,6 +20,8 @@ export interface Expense {
   date: string
 }
 
+type Subscriber = () => void;
+
 export class AppState {
   private participants: Participant[] = []
   private expenses: Expense[] = []
@@ -29,6 +31,8 @@ export class AppState {
     { code: 'USD', symbol: '$', name: 'Dolar amerykański', exchangeRate: 3.95 },
     { code: 'GBP', symbol: '£', name: 'Funt brytyjski', exchangeRate: 5.05 }
   ]
+
+  private subscribers: Set<Subscriber> = new Set()
 
   constructor() {
     this.loadFromLocalStorage()
@@ -45,18 +49,31 @@ export class AppState {
     }
   }
 
+  subscribe(callback: Subscriber) {
+    this.subscribers.add(callback)
+    return () => {
+      this.subscribers.delete(callback)
+    }
+  }
+
+  private notifySubscribers() {
+    this.subscribers.forEach(callback => callback())
+  }
+
   // Zarządzanie uczestnikami
   addParticipant(name: string): Participant {
     const id = crypto.randomUUID()
     const participant: Participant = { id, name }
     this.participants.push(participant)
     this.saveToLocalStorage()
+    this.notifySubscribers()
     return participant
   }
 
   removeParticipant(id: string): void {
     this.participants = this.participants.filter(p => p.id !== id)
     this.saveToLocalStorage()
+    this.notifySubscribers()
   }
 
   getParticipants(): Participant[] {
@@ -70,12 +87,14 @@ export class AppState {
     const newExpense: Expense = { ...expense, id, date }
     this.expenses.push(newExpense)
     this.saveToLocalStorage()
+    this.notifySubscribers()
     return newExpense
   }
 
   removeExpense(id: string): void {
     this.expenses = this.expenses.filter(e => e.id !== id)
     this.saveToLocalStorage()
+    this.notifySubscribers()
   }
 
   updateExpense(id: string, expense: Partial<Omit<Expense, 'id'>>): void {
@@ -83,6 +102,7 @@ export class AppState {
     if (index !== -1) {
       this.expenses[index] = { ...this.expenses[index], ...expense }
       this.saveToLocalStorage()
+      this.notifySubscribers()
     }
   }
 
@@ -100,6 +120,7 @@ export class AppState {
     if (currency) {
       currency.exchangeRate = rate
       this.saveToLocalStorage()
+      this.notifySubscribers()
     }
   }
 
