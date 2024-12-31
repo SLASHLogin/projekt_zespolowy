@@ -90,11 +90,11 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 ### 1. Konfiguracja projektu i środowiska
 
-- [ ] Utworzenie struktury projektu
-- [ ] Konfiguracja systemu budowania (np. Vite.js dla szybkiego developmentu)
-- [ ] Instalacja i konfiguracja frameworka CSS (Bootstrap 5 dla responsywności i lekkości)
+- [x] Utworzenie struktury projektu
+- [x] Konfiguracja systemu budowania (np. Vite.js dla szybkiego developmentu)
+- [x] Instalacja i konfiguracja frameworka CSS (Bootstrap 5 dla responsywności i lekkości)
 - [x] Konfiguracja systemu kontroli wersji (Git)
-- [ ] Utworzenie podstawowego pliku HTML z odpowiednimi metatagami dla RWD
+- [x] Utworzenie podstawowego pliku HTML z odpowiednimi metatagami dla RWD
 
 ### 2. Implementacja interfejsu użytkownika
 
