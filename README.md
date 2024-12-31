@@ -98,7 +98,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 ### 2. Implementacja interfejsu użytkownika
 
-- [ ] Zaprojektowanie i implementacja responsywnego layoutu strony
+- [x] Zaprojektowanie i implementacja responsywnego layoutu strony
 - [ ] Utworzenie formularza dodawania nowego wydatku z polami: kwota, płatnik, beneficjenci
 - [ ] Implementacja wielowalutowego wyboru przy dodawaniu wydatku
 - [ ] Utworzenie widoku listy wszystkich wydatków z możliwością edycji i usuwania
