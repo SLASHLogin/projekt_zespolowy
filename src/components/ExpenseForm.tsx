@@ -1,9 +1,5 @@
 import { useState, FormEvent } from 'react'
-
-interface Participant {
-  id: string
-  name: string
-}
+import { useAppState } from '../state/AppContext'
 
 interface ExpenseFormData {
   amount: string
@@ -13,14 +9,8 @@ interface ExpenseFormData {
   description: string
 }
 
-const AVAILABLE_CURRENCIES = [
-  { code: 'PLN', symbol: 'zł', name: 'Polski złoty' },
-  { code: 'EUR', symbol: '€', name: 'Euro' },
-  { code: 'USD', symbol: '$', name: 'Dolar amerykański' },
-  { code: 'GBP', symbol: '£', name: 'Funt brytyjski' }
-]
-
 const ExpenseForm = () => {
+  const appState = useAppState()
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: '',
     currency: 'PLN',
@@ -29,16 +19,29 @@ const ExpenseForm = () => {
     description: ''
   })
 
-  const [participants] = useState<Participant[]>([
-    { id: '1', name: 'Osoba 1' },
-    { id: '2', name: 'Osoba 2' },
-    { id: '3', name: 'Osoba 3' }
-  ])
+  const participants = appState.getParticipants()
+  const currencies = appState.getCurrencies()
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
-    // TODO: Dodać obsługę zapisu wydatku
-    console.log('Zapisano wydatek:', formData)
+    if (formData.amount && formData.payer && formData.beneficiaries.length > 0) {
+      appState.addExpense({
+        amount: parseFloat(formData.amount),
+        currency: formData.currency,
+        payer: formData.payer,
+        beneficiaries: formData.beneficiaries,
+        description: formData.description
+      })
+      
+      // Resetowanie formularza
+      setFormData({
+        amount: '',
+        currency: 'PLN',
+        payer: '',
+        beneficiaries: [],
+        description: ''
+      })
+    }
   }
 
   return (
@@ -64,7 +67,7 @@ const ExpenseForm = () => {
             onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
             required
           >
-            {AVAILABLE_CURRENCIES.map(currency => (
+            {currencies.map(currency => (
               <option key={currency.code} value={currency.code}>
                 {currency.code} ({currency.symbol})
               </option>
@@ -72,7 +75,7 @@ const ExpenseForm = () => {
           </select>
         </div>
         <div className="form-text">
-          Wybrana waluta: {AVAILABLE_CURRENCIES.find(c => c.code === formData.currency)?.name}
+          Wybrana waluta: {currencies.find(c => c.code === formData.currency)?.name}
         </div>
         <div className="invalid-feedback">
           Proszę podać prawidłową kwotę i walutę
