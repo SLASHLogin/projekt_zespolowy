@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './App.css'
+import ExpenseForm from './components/ExpenseForm.tsx'
 
 function App() {
   return (
@@ -23,7 +24,7 @@ function App() {
                   <h2 className="h5 mb-0">Dodaj wydatek</h2>
                 </div>
                 <div className="card-body">
-                  <p className="text-muted">Formularz dodawania wydatku pojawi się tutaj</p>
+                  <ExpenseForm />
                 </div>
               </div>
             </div>
