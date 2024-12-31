@@ -7,14 +7,23 @@ interface Participant {
 
 interface ExpenseFormData {
   amount: string
+  currency: string
   payer: string
   beneficiaries: string[]
   description: string
 }
 
+const AVAILABLE_CURRENCIES = [
+  { code: 'PLN', symbol: 'zł', name: 'Polski złoty' },
+  { code: 'EUR', symbol: '€', name: 'Euro' },
+  { code: 'USD', symbol: '$', name: 'Dolar amerykański' },
+  { code: 'GBP', symbol: '£', name: 'Funt brytyjski' }
+]
+
 const ExpenseForm = () => {
   const [formData, setFormData] = useState<ExpenseFormData>({
     amount: '',
+    currency: 'PLN',
     payer: '',
     beneficiaries: [],
     description: ''
@@ -34,7 +43,7 @@ const ExpenseForm = () => {
 
   return (
     <form onSubmit={handleSubmit} className="needs-validation" noValidate>
-      {/* Kwota */}
+      {/* Kwota i waluta */}
       <div className="mb-3">
         <label htmlFor="amount" className="form-label">Kwota</label>
         <div className="input-group">
@@ -48,10 +57,25 @@ const ExpenseForm = () => {
             min="0"
             step="0.01"
           />
-          <span className="input-group-text">PLN</span>
+          <select
+            className="form-select"
+            style={{ maxWidth: '120px' }}
+            value={formData.currency}
+            onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
+            required
+          >
+            {AVAILABLE_CURRENCIES.map(currency => (
+              <option key={currency.code} value={currency.code}>
+                {currency.code} ({currency.symbol})
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-text">
+          Wybrana waluta: {AVAILABLE_CURRENCIES.find(c => c.code === formData.currency)?.name}
         </div>
         <div className="invalid-feedback">
-          Proszę podać prawidłową kwotę
+          Proszę podać prawidłową kwotę i walutę
         </div>
       </div>
 
