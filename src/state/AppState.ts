@@ -32,6 +32,17 @@ export class AppState {
 
   constructor() {
     this.loadFromLocalStorage()
+    
+    // Dodaj domyślnych uczestników, jeśli nie ma żadnych
+    if (this.participants.length === 0) {
+      this.participants = [
+        { id: '1', name: 'Anna' },
+        { id: '2', name: 'Bartosz' },
+        { id: '3', name: 'Celina' },
+        { id: '4', name: 'Daniel' }
+      ]
+      this.saveToLocalStorage()
+    }
   }
 
   // Zarządzanie uczestnikami
