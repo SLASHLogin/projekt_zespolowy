@@ -102,7 +102,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Utworzenie formularza dodawania nowego wydatku z polami: kwota, płatnik, beneficjenci
 - [x] Implementacja wielowalutowego wyboru przy dodawaniu wydatku
 - [x] Utworzenie widoku listy wszystkich wydatków z możliwością edycji i usuwania
-- [ ] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
+- [x] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
 - [ ] Dodanie modalnego okna do wprowadzania kursów walut
 - [ ] Utworzenie interfejsu do rejestrowania spłat między uczestnikami
 - [ ] Implementacja przycisku do resetowania wszystkich rozliczeń
@@ -110,7 +110,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 ### 3. Implementacja logiki biznesowej
 
 - [x] Utworzenie klasy zarządzającej stanem aplikacji
-- [ ] Implementacja algorytmu obliczającego bilans należności
+- [x] Implementacja algorytmu obliczającego bilans należności
 - [ ] Dodanie obsługi wielu walut i ich przeliczania
 - [ ] Implementacja mechanizmu zapisywania stanu do pliku (JSON)
 - [ ] Implementacja mechanizmu wczytywania stanu z pliku
