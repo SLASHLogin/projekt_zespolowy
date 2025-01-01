@@ -1,9 +1,9 @@
-import React, { useContext } from 'react'
-import { AppContext } from '../state/AppContext'
-import { Balance, Transfer } from '../state/AppState'
+import React from 'react'
+import { useAppState } from '../state/AppContext'
+import { Balance, Transfer, Participant } from '../state/AppState'
 
 export const ExpenseSummary: React.FC = () => {
-  const { state } = useContext(AppContext)
+  const state = useAppState()
   const balances = state.calculateBalances()
   const transfers = state.calculateTransfers()
   const participants = state.getParticipants()
@@ -16,7 +16,7 @@ export const ExpenseSummary: React.FC = () => {
   }
 
   const getParticipantName = (id: string): string => {
-    return participants.find(p => p.id === id)?.name || id
+    return participants.find((p: Participant) => p.id === id)?.name || id
   }
 
   const renderBalance = (balance: Balance) => {
