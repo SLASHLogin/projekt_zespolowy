@@ -2,7 +2,7 @@ import React from 'react'
 import { useAppState } from '../state/AppContext'
 import { Balance, Transfer, Participant } from '../state/AppState'
 
-export const ExpenseSummary: React.FC = () => {
+const ExpenseSummary: React.FC = () => {
   const state = useAppState()
   const balances = state.calculateBalances()
   const transfers = state.calculateTransfers()
@@ -62,8 +62,6 @@ export const ExpenseSummary: React.FC = () => {
 
   return (
     <div className="container my-4">
-      <h3 className="mb-4">Podsumowanie rozliczeń</h3>
-      
       <div className="mb-4">
         <h5 className="mb-3">Bilans per osoba</h5>
         {balances.map(renderBalance)}
@@ -83,3 +81,5 @@ export const ExpenseSummary: React.FC = () => {
     </div>
   )
 }
+
+export default ExpenseSummary

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './App.css'
 import ExpenseForm from './components/ExpenseForm.tsx'
 import ExpenseList from './components/ExpenseList.tsx'
+import ExpenseSummary from './components/ExpenseSummary.tsx'
 import { AppProvider } from './state/AppContext'
 
 function App() {
@@ -50,8 +51,8 @@ function App() {
                   <div className="card-header">
                     <h2 className="h5 mb-0">Podsumowanie rozliczeń</h2>
                   </div>
-                  <div className="card-body">
-                    <p className="text-muted">Podsumowanie rozliczeń pojawi się tutaj</p>
+                  <div className="card-body p-0">
+                    <ExpenseSummary />
                   </div>
                 </div>
               </div>
