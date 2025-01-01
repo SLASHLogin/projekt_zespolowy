@@ -1,7 +1,7 @@
 import { createContext, useContext, ReactNode, useEffect, useState } from 'react'
 import { AppState } from './AppState'
 
-const AppContext = createContext<AppState | null>(null)
+export const AppContext = createContext<AppState | null>(null)
 
 interface AppProviderProps {
   children: ReactNode
