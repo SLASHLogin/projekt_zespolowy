@@ -345,4 +345,15 @@ export class AppState {
       console.error('Błąd podczas importowania danych:', error)
     }
   }
+
+  // Resetowanie rozliczeń
+  resetState(): void {
+    // Zachowaj uczestników i kursy walut
+    this.expenses = []
+    this.payments = []
+    
+    // Zapisz stan i powiadom subskrybentów
+    this.saveToLocalStorage()
+    this.notifySubscribers()
+  }
 }

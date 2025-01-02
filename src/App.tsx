@@ -10,6 +10,7 @@ import { AppProvider, useAppState } from './state/AppContext'
 function AppContent() {
   const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const [showResetModal, setShowResetModal] = useState(false)
   const appState = useAppState()
 
   const handleExport = () => {
@@ -73,10 +74,16 @@ function AppContent() {
                   Zarejestruj spłatę
                 </button>
                 <button 
-                  className="btn btn-outline-light"
+                  className="btn btn-outline-light me-2"
                   onClick={() => setShowCurrencyModal(true)}
                 >
                   Kursy walut
+                </button>
+                <button 
+                  className="btn btn-outline-light"
+                  onClick={() => setShowResetModal(true)}
+                >
+                  Resetuj rozliczenia
                 </button>
               </div>
             </div>
@@ -145,6 +152,47 @@ function AppContent() {
           <div className="modal show d-block" tabIndex={-1}>
             <div className="modal-dialog">
               <PaymentForm onClose={() => setShowPaymentModal(false)} />
+            </div>
+            <div className="modal-backdrop fade show"></div>
+          </div>
+        )}
+
+        {showResetModal && (
+          <div className="modal show d-block" tabIndex={-1}>
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <h5 className="modal-title">Potwierdź resetowanie</h5>
+                  <button 
+                    type="button" 
+                    className="btn-close" 
+                    onClick={() => setShowResetModal(false)}
+                  ></button>
+                </div>
+                <div className="modal-body">
+                  <p>Czy na pewno chcesz zresetować wszystkie rozliczenia? Ta operacja usunie wszystkie wydatki i płatności, ale zachowa uczestników i kursy walut.</p>
+                  <p className="text-danger mb-0">Tej operacji nie można cofnąć!</p>
+                </div>
+                <div className="modal-footer">
+                  <button 
+                    type="button" 
+                    className="btn btn-secondary" 
+                    onClick={() => setShowResetModal(false)}
+                  >
+                    Anuluj
+                  </button>
+                  <button 
+                    type="button" 
+                    className="btn btn-danger" 
+                    onClick={() => {
+                      appState.resetState()
+                      setShowResetModal(false)
+                    }}
+                  >
+                    Resetuj
+                  </button>
+                </div>
+              </div>
             </div>
             <div className="modal-backdrop fade show"></div>
           </div>

@@ -105,7 +105,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
 - [x] Dodanie modalnego okna do wprowadzania kursów walut
 - [x] Utworzenie interfejsu do rejestrowania spłat między uczestnikami
-- [ ] Implementacja przycisku do resetowania wszystkich rozliczeń
+- [x] Implementacja przycisku do resetowania wszystkich rozliczeń
 
 ### 3. Implementacja logiki biznesowej
 
@@ -116,7 +116,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Implementacja mechanizmu wczytywania stanu z pliku
 - [x] Dodanie walidacji wprowadzanych danych
 - [x] Implementacja obsługi spłat między uczestnikami
-- [ ] Dodanie funkcji resetowania rozliczeń
+- [x] Dodanie funkcji resetowania rozliczeń
 
 ### 4. Optymalizacja i testowanie
 
