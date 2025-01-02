@@ -224,6 +224,33 @@ export class AppState {
     return amount * currency.exchangeRate
   }
 
+  convertBetweenCurrencies(amount: number, fromCurrency: string, toCurrency: string): number {
+    // Najpierw przelicz na PLN
+    const amountInPLN = this.convertToMainCurrency(amount, fromCurrency)
+    
+    // Następnie przelicz z PLN na docelową walutę
+    const targetCurrency = this.currencies.find(c => c.code === toCurrency)
+    if (!targetCurrency) return amount
+    
+    return Number((amountInPLN / targetCurrency.exchangeRate).toFixed(2))
+  }
+
+  formatAmount(amount: number, currencyCode: string): string {
+    const currency = this.currencies.find(c => c.code === currencyCode)
+    if (!currency) return `${amount}`
+    
+    return new Intl.NumberFormat('pl-PL', {
+      style: 'currency',
+      currency: currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(amount)
+  }
+
+  validateExchangeRate(rate: number): boolean {
+    return !isNaN(rate) && rate > 0 && rate <= 1000
+  }
+
   // Persystencja danych
   private saveToLocalStorage(): void {
     const data = {
