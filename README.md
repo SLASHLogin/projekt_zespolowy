@@ -120,8 +120,8 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 ### 4. Optymalizacja i testowanie
 
-- [ ] Optymalizacja wydajności renderowania komponentów
-- [ ] Implementacja mechanizmu buforowania obliczeń
+- [x] Optymalizacja wydajności renderowania komponentów
+- [x] Implementacja mechanizmu buforowania obliczeń
 - [ ] Testowanie responsywności na różnych urządzeniach
 - [ ] Testowanie obsługi różnych formatów plików i danych
 - [ ] Sprawdzenie poprawności obliczeń dla różnych scenariuszy

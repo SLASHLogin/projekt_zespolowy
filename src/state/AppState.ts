@@ -48,6 +48,12 @@ export class AppState {
   private participants: Participant[] = []
   private expenses: Expense[] = []
   private payments: Payment[] = []
+  
+  // Bufory dla kosztownych obliczeń
+  private cachedBalances: Balance[] | null = null
+  private cachedTransfers: Transfer[] | null = null
+  private isBalancesCacheValid = false
+  private isTransfersCacheValid = false
   private currencies: Currency[] = [
     { code: 'PLN', symbol: 'zł', name: 'Polski złoty', exchangeRate: 1 },
     { code: 'EUR', symbol: '€', name: 'Euro', exchangeRate: 4.32 },
@@ -83,6 +89,13 @@ export class AppState {
     this.subscribers.forEach(callback => callback())
   }
 
+  private invalidateCache() {
+    this.isBalancesCacheValid = false
+    this.isTransfersCacheValid = false
+    this.cachedBalances = null
+    this.cachedTransfers = null
+  }
+
   // Zarządzanie uczestnikami
   addParticipant(name: string): Participant {
     const id = crypto.randomUUID()
@@ -109,6 +122,7 @@ export class AppState {
     const date = new Date().toISOString()
     const newExpense: Expense = { ...expense, id, date }
     this.expenses.push(newExpense)
+    this.invalidateCache()
     this.saveToLocalStorage()
     this.notifySubscribers()
     return newExpense
@@ -116,6 +130,7 @@ export class AppState {
 
   removeExpense(id: string): void {
     this.expenses = this.expenses.filter(e => e.id !== id)
+    this.invalidateCache()
     this.saveToLocalStorage()
     this.notifySubscribers()
   }
@@ -124,6 +139,7 @@ export class AppState {
     const index = this.expenses.findIndex(e => e.id === id)
     if (index !== -1) {
       this.expenses[index] = { ...this.expenses[index], ...expense }
+      this.invalidateCache()
       this.saveToLocalStorage()
       this.notifySubscribers()
     }
@@ -133,8 +149,12 @@ export class AppState {
     return [...this.expenses]
   }
 
-  // Obliczanie bilansu
+  // Obliczanie bilansu z wykorzystaniem bufora
   calculateBalances(): Balance[] {
+    if (this.isBalancesCacheValid && this.cachedBalances) {
+      return [...this.cachedBalances]
+    }
+
     const balances: Balance[] = this.participants.map(participant => ({
       participantId: participant.id,
       totalPaid: 0,
@@ -164,11 +184,17 @@ export class AppState {
       balance.netBalance = balance.totalPaid - balance.totalOwed
     })
 
-    return balances
+    this.cachedBalances = balances
+    this.isBalancesCacheValid = true
+    return [...balances]
   }
 
-  // Obliczanie optymalnych transferów
+  // Obliczanie optymalnych transferów z wykorzystaniem bufora
   calculateTransfers(): Transfer[] {
+    if (this.isTransfersCacheValid && this.cachedTransfers) {
+      return [...this.cachedTransfers]
+    }
+
     const balances = this.calculateBalances()
     const transfers: Transfer[] = []
 
@@ -210,7 +236,9 @@ export class AppState {
       if (Math.abs(creditor.balance) < 0.01) creditors.shift()
     }
 
-    return transfers
+    this.cachedTransfers = transfers
+    this.isTransfersCacheValid = true
+    return [...transfers]
   }
 
   // Zarządzanie walutami
@@ -285,6 +313,7 @@ export class AppState {
 
   // Zarządzanie płatnościami
   registerPayment(from: string, to: string, amount: number, currency: string): Payment {
+    this.invalidateCache()
     // Sprawdź czy uczestnicy istnieją
     const payer = this.participants.find(p => p.id === from)
     const recipient = this.participants.find(p => p.id === to)
@@ -320,6 +349,7 @@ export class AppState {
 
   removePayment(id: string): void {
     this.payments = this.payments.filter(p => p.id !== id)
+    this.invalidateCache()
     this.saveToLocalStorage()
     this.notifySubscribers()
   }
@@ -340,6 +370,7 @@ export class AppState {
       this.participants = data.participants || []
       this.expenses = data.expenses || []
       this.currencies = data.currencies || this.currencies
+      this.invalidateCache()
       this.saveToLocalStorage()
     } catch (error) {
       console.error('Błąd podczas importowania danych:', error)
@@ -352,7 +383,8 @@ export class AppState {
     this.expenses = []
     this.payments = []
     
-    // Zapisz stan i powiadom subskrybentów
+    // Zresetuj bufor i zapisz stan
+    this.invalidateCache()
     this.saveToLocalStorage()
     this.notifySubscribers()
   }
