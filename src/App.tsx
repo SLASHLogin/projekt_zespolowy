@@ -3,17 +3,29 @@ import './App.css'
 import ExpenseForm from './components/ExpenseForm.tsx'
 import ExpenseList from './components/ExpenseList.tsx'
 import ExpenseSummary from './components/ExpenseSummary.tsx'
+import { CurrencyRateModal } from './components/CurrencyRateModal'
 import { AppProvider } from './state/AppContext'
 
 function App() {
+  const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   return (
     <AppProvider>
       <div className="min-vh-100 d-flex flex-column">
         {/* Nagłówek */}
         <header className="bg-primary text-white py-3">
           <div className="container">
-            <h1 className="h3 mb-0">Split Expenses</h1>
-            <p className="mb-0">Rozliczenia grupowe</p>
+            <div className="d-flex justify-content-between align-items-center">
+              <div>
+                <h1 className="h3 mb-0">Split Expenses</h1>
+                <p className="mb-0">Rozliczenia grupowe</p>
+              </div>
+              <button 
+                className="btn btn-outline-light"
+                onClick={() => setShowCurrencyModal(true)}
+              >
+                Kursy walut
+              </button>
+            </div>
           </div>
         </header>
 
@@ -68,6 +80,12 @@ function App() {
             </div>
           </div>
         </footer>
+
+        {/* Modal kursów walut */}
+        <CurrencyRateModal 
+          show={showCurrencyModal}
+          onClose={() => setShowCurrencyModal(false)}
+        />
       </div>
     </AppProvider>
   )
