@@ -33,11 +33,21 @@ export interface Transfer {
   amount: number        // kwota w walucie głównej (PLN)
 }
 
+export interface Payment {
+  id: string
+  from: string           // id płatnika
+  to: string            // id odbiorcy
+  amount: number        // kwota płatności
+  currency: string      // waluta płatności
+  date: string         // data płatności
+}
+
 type Subscriber = () => void;
 
 export class AppState {
   private participants: Participant[] = []
   private expenses: Expense[] = []
+  private payments: Payment[] = []
   private currencies: Currency[] = [
     { code: 'PLN', symbol: 'zł', name: 'Polski złoty', exchangeRate: 1 },
     { code: 'EUR', symbol: '€', name: 'Euro', exchangeRate: 4.32 },
@@ -256,7 +266,8 @@ export class AppState {
     const data = {
       participants: this.participants,
       expenses: this.expenses,
-      currencies: this.currencies
+      currencies: this.currencies,
+      payments: this.payments
     }
     localStorage.setItem('splitExpensesState', JSON.stringify(data))
   }
@@ -264,11 +275,53 @@ export class AppState {
   private loadFromLocalStorage(): void {
     const data = localStorage.getItem('splitExpensesState')
     if (data) {
-      const { participants, expenses, currencies } = JSON.parse(data)
+      const { participants, expenses, currencies, payments } = JSON.parse(data)
       this.participants = participants
       this.expenses = expenses
       this.currencies = currencies
+      this.payments = payments || []
     }
+  }
+
+  // Zarządzanie płatnościami
+  registerPayment(from: string, to: string, amount: number, currency: string): Payment {
+    // Sprawdź czy uczestnicy istnieją
+    const payer = this.participants.find(p => p.id === from)
+    const recipient = this.participants.find(p => p.id === to)
+    
+    if (!payer || !recipient) {
+      throw new Error('Nieprawidłowy płatnik lub odbiorca')
+    }
+
+    // Sprawdź czy waluta jest obsługiwana
+    const currencyExists = this.currencies.some(c => c.code === currency)
+    if (!currencyExists) {
+      throw new Error('Nieprawidłowa waluta')
+    }
+
+    const payment: Payment = {
+      id: crypto.randomUUID(),
+      from,
+      to,
+      amount,
+      currency,
+      date: new Date().toISOString()
+    }
+
+    this.payments.push(payment)
+    this.saveToLocalStorage()
+    this.notifySubscribers()
+    return payment
+  }
+
+  getPayments(): Payment[] {
+    return [...this.payments]
+  }
+
+  removePayment(id: string): void {
+    this.payments = this.payments.filter(p => p.id !== id)
+    this.saveToLocalStorage()
+    this.notifySubscribers()
   }
 
   // Eksport/Import danych
@@ -276,7 +329,8 @@ export class AppState {
     return JSON.stringify({
       participants: this.participants,
       expenses: this.expenses,
-      currencies: this.currencies
+      currencies: this.currencies,
+      payments: this.payments
     }, null, 2)
   }
 

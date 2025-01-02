@@ -104,7 +104,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Utworzenie widoku listy wszystkich wydatków z możliwością edycji i usuwania
 - [x] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
 - [ ] Dodanie modalnego okna do wprowadzania kursów walut
-- [ ] Utworzenie interfejsu do rejestrowania spłat między uczestnikami
+- [x] Utworzenie interfejsu do rejestrowania spłat między uczestnikami
 - [ ] Implementacja przycisku do resetowania wszystkich rozliczeń
 
 ### 3. Implementacja logiki biznesowej

@@ -4,10 +4,12 @@ import ExpenseForm from './components/ExpenseForm.tsx'
 import ExpenseList from './components/ExpenseList.tsx'
 import ExpenseSummary from './components/ExpenseSummary.tsx'
 import { CurrencyRateModal } from './components/CurrencyRateModal'
+import { PaymentForm } from './components/PaymentForm'
 import { AppProvider } from './state/AppContext'
 
 function App() {
   const [showCurrencyModal, setShowCurrencyModal] = useState(false)
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
   return (
     <AppProvider>
       <div className="min-vh-100 d-flex flex-column">
@@ -19,12 +21,20 @@ function App() {
                 <h1 className="h3 mb-0">Split Expenses</h1>
                 <p className="mb-0">Rozliczenia grupowe</p>
               </div>
-              <button 
-                className="btn btn-outline-light"
-                onClick={() => setShowCurrencyModal(true)}
-              >
-                Kursy walut
-              </button>
+              <div>
+                <button 
+                  className="btn btn-outline-light me-2"
+                  onClick={() => setShowPaymentModal(true)}
+                >
+                  Zarejestruj spłatę
+                </button>
+                <button 
+                  className="btn btn-outline-light"
+                  onClick={() => setShowCurrencyModal(true)}
+                >
+                  Kursy walut
+                </button>
+              </div>
             </div>
           </div>
         </header>
@@ -81,11 +91,20 @@ function App() {
           </div>
         </footer>
 
-        {/* Modal kursów walut */}
+        {/* Modale */}
         <CurrencyRateModal 
           show={showCurrencyModal}
           onClose={() => setShowCurrencyModal(false)}
         />
+
+        {showPaymentModal && (
+          <div className="modal show d-block" tabIndex={-1}>
+            <div className="modal-dialog">
+              <PaymentForm onClose={() => setShowPaymentModal(false)} />
+            </div>
+            <div className="modal-backdrop fade show"></div>
+          </div>
+        )}
       </div>
     </AppProvider>
   )
