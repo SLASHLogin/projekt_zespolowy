@@ -27,14 +27,33 @@ export const CurrencyRateModal: React.FC<CurrencyRateModalProps> = ({ show, onCl
     }))
   }
 
+  // Stan dla błędów walidacji
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
   // Zapisywanie zmian
   const handleSave = () => {
+    const newErrors: Record<string, string> = {}
+    let hasErrors = false
+
     currencies.forEach(currency => {
       if (currency.code !== 'PLN') {
         const newRate = parseFloat(rates[currency.code])
-        if (!isNaN(newRate) && newRate > 0) {
-          appState.updateExchangeRate(currency.code, newRate)
+        if (!appState.validateExchangeRate(newRate)) {
+          newErrors[currency.code] = 'Kurs musi być liczbą większą od 0 i mniejszą od 1000'
+          hasErrors = true
         }
+      }
+    })
+
+    if (hasErrors) {
+      setErrors(newErrors)
+      return
+    }
+
+    currencies.forEach(currency => {
+      if (currency.code !== 'PLN') {
+        const newRate = parseFloat(rates[currency.code])
+        appState.updateExchangeRate(currency.code, newRate)
       }
     })
     onClose()
@@ -74,14 +93,29 @@ export const CurrencyRateModal: React.FC<CurrencyRateModalProps> = ({ show, onCl
                         {currency.code === 'PLN' ? (
                           <span>1.00</span>
                         ) : (
-                          <input
-                            type="number"
-                            className="form-control form-control-sm"
-                            value={rates[currency.code]}
-                            onChange={(e) => handleRateChange(currency, e.target.value)}
-                            min="0"
-                            step="0.01"
-                          />
+                          <>
+                            <input
+                              type="number"
+                              className={`form-control form-control-sm ${errors[currency.code] ? 'is-invalid' : ''}`}
+                              value={rates[currency.code]}
+                              onChange={(e) => {
+                                handleRateChange(currency, e.target.value)
+                                if (errors[currency.code]) {
+                                  setErrors(prev => ({
+                                    ...prev,
+                                    [currency.code]: ''
+                                  }))
+                                }
+                              }}
+                              min="0"
+                              step="0.01"
+                            />
+                            {errors[currency.code] && (
+                              <div className="invalid-feedback">
+                                {errors[currency.code]}
+                              </div>
+                            )}
+                          </>
                         )}
                       </td>
                     </tr>
