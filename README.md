@@ -103,7 +103,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Implementacja wielowalutowego wyboru przy dodawaniu wydatku
 - [x] Utworzenie widoku listy wszystkich wydatków z możliwością edycji i usuwania
 - [x] Implementacja widoku podsumowania rozliczeń (kto, komu, ile)
-- [ ] Dodanie modalnego okna do wprowadzania kursów walut
+- [x] Dodanie modalnego okna do wprowadzania kursów walut
 - [x] Utworzenie interfejsu do rejestrowania spłat między uczestnikami
 - [ ] Implementacja przycisku do resetowania wszystkich rozliczeń
 
@@ -111,11 +111,11 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 - [x] Utworzenie klasy zarządzającej stanem aplikacji
 - [x] Implementacja algorytmu obliczającego bilans należności
-- [ ] Dodanie obsługi wielu walut i ich przeliczania
+- [x] Dodanie obsługi wielu walut i ich przeliczania
 - [ ] Implementacja mechanizmu zapisywania stanu do pliku (JSON)
 - [ ] Implementacja mechanizmu wczytywania stanu z pliku
-- [ ] Dodanie walidacji wprowadzanych danych
-- [ ] Implementacja obsługi spłat między uczestnikami
+- [x] Dodanie walidacji wprowadzanych danych
+- [x] Implementacja obsługi spłat między uczestnikami
 - [ ] Dodanie funkcji resetowania rozliczeń
 
 ### 4. Optymalizacja i testowanie
