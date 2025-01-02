@@ -5,14 +5,46 @@ import ExpenseList from './components/ExpenseList.tsx'
 import ExpenseSummary from './components/ExpenseSummary.tsx'
 import { CurrencyRateModal } from './components/CurrencyRateModal'
 import { PaymentForm } from './components/PaymentForm'
-import { AppProvider } from './state/AppContext'
+import { AppProvider, useAppState } from './state/AppContext'
 
-function App() {
+function AppContent() {
   const [showCurrencyModal, setShowCurrencyModal] = useState(false)
   const [showPaymentModal, setShowPaymentModal] = useState(false)
+  const appState = useAppState()
+
+  const handleExport = () => {
+    const jsonString = appState.exportState()
+    const blob = new Blob([jsonString], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `split-expenses-${new Date().toISOString().split('T')[0]}.json`
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const handleImport = () => {
+    const input = document.createElement('input')
+    input.type = 'file'
+    input.accept = '.json'
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0]
+      if (file) {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+          const content = e.target?.result as string
+          appState.importState(content)
+        }
+        reader.readAsText(file)
+      }
+    }
+    input.click()
+  }
+
   return (
-    <AppProvider>
-      <div className="min-vh-100 d-flex flex-column">
+    <div className="min-vh-100 d-flex flex-column">
         {/* Nagłówek */}
         <header className="bg-primary text-white py-3">
           <div className="container">
@@ -22,6 +54,18 @@ function App() {
                 <p className="mb-0">Rozliczenia grupowe</p>
               </div>
               <div>
+                <button 
+                  className="btn btn-outline-light me-2"
+                  onClick={handleExport}
+                >
+                  Eksportuj
+                </button>
+                <button 
+                  className="btn btn-outline-light me-2"
+                  onClick={handleImport}
+                >
+                  Importuj
+                </button>
                 <button 
                   className="btn btn-outline-light me-2"
                   onClick={() => setShowPaymentModal(true)}
@@ -106,6 +150,13 @@ function App() {
           </div>
         )}
       </div>
+  )
+}
+
+function App() {
+  return (
+    <AppProvider>
+      <AppContent />
     </AppProvider>
   )
 }

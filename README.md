@@ -112,8 +112,8 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Utworzenie klasy zarządzającej stanem aplikacji
 - [x] Implementacja algorytmu obliczającego bilans należności
 - [x] Dodanie obsługi wielu walut i ich przeliczania
-- [ ] Implementacja mechanizmu zapisywania stanu do pliku (JSON)
-- [ ] Implementacja mechanizmu wczytywania stanu z pliku
+- [x] Implementacja mechanizmu zapisywania stanu do pliku (JSON)
+- [x] Implementacja mechanizmu wczytywania stanu z pliku
 - [x] Dodanie walidacji wprowadzanych danych
 - [x] Implementacja obsługi spłat między uczestnikami
 - [ ] Dodanie funkcji resetowania rozliczeń
