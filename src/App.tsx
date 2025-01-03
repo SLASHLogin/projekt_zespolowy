@@ -126,42 +126,44 @@ const AppContent = memo(() => {
         {/* Nagłówek */}
         <header className="bg-primary text-white py-3">
           <div className="container">
-            <div className="d-flex justify-content-between align-items-center">
-              <div>
+            <div className="row g-3">
+              <div className="col-12 col-md-4 col-lg-3">
                 <h1 className="h3 mb-0">Split Expenses</h1>
-                <p className="mb-0">Rozliczenia grupowe</p>
+                <p className="mb-0 d-none d-md-block">Rozliczenia grupowe</p>
               </div>
-              <div>
-                <button 
-                  className="btn btn-outline-light me-2"
-                  onClick={handleExport}
-                >
-                  Eksportuj
-                </button>
-                <button 
-                  className="btn btn-outline-light me-2"
-                  onClick={handleImport}
-                >
-                  Importuj
-                </button>
-                <button 
-                  className="btn btn-outline-light me-2"
-                  onClick={handleShowPaymentModal}
-                >
-                  Zarejestruj spłatę
-                </button>
-                <button 
-                  className="btn btn-outline-light me-2"
-                  onClick={handleShowCurrencyModal}
-                >
-                  Kursy walut
-                </button>
-                <button 
-                  className="btn btn-outline-light"
-                  onClick={handleShowResetModal}
-                >
-                  Resetuj rozliczenia
-                </button>
+              <div className="col-12 col-md-8 col-lg-9">
+                <div className="d-flex flex-wrap gap-2 justify-content-start justify-content-md-end">
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleExport}
+                  >
+                    Eksportuj
+                  </button>
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleImport}
+                  >
+                    Importuj
+                  </button>
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleShowPaymentModal}
+                  >
+                    Zarejestruj spłatę
+                  </button>
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleShowCurrencyModal}
+                  >
+                    Kursy walut
+                  </button>
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleShowResetModal}
+                  >
+                    Resetuj rozliczenia
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -172,7 +174,7 @@ const AppContent = memo(() => {
           <div className="container">
             <div className="row g-4">
               {/* Sekcja dodawania/edycji wydatków */}
-              <div className="col-12 col-lg-4">
+              <div className="col-12 col-md-6 col-lg-4">
                 <div className="card h-100">
                   <div className="card-header">
                     <h2 className="h5 mb-0">Dodaj wydatek</h2>
@@ -184,7 +186,7 @@ const AppContent = memo(() => {
               </div>
 
               {/* Sekcja listy wydatków */}
-              <div className="col-12 col-lg-4">
+              <div className="col-12 col-md-6 col-lg-4">
                 <div className="card h-100">
                   <div className="card-header">
                     <h2 className="h5 mb-0">Lista wydatków</h2>
@@ -196,7 +198,7 @@ const AppContent = memo(() => {
               </div>
 
               {/* Sekcja podsumowania rozliczeń */}
-              <div className="col-12 col-lg-4">
+              <div className="col-12 col-md-6 col-lg-4">
                 <div className="card h-100">
                   <div className="card-header">
                     <h2 className="h5 mb-0">Podsumowanie rozliczeń</h2>

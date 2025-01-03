@@ -4,7 +4,7 @@ import { useAppState } from '../state/AppContext';
 import { Expense } from '../state/AppState';
 import ExpenseItem from './ExpenseItem';
 
-const ITEM_HEIGHT = 200; // Przybliżona wysokość pojedynczego elementu w pikselach
+const ITEM_HEIGHT = 200; // Stała wysokość elementu
 
 const ExpenseList: React.FC = React.memo(() => {
   const appState = useAppState();
@@ -83,10 +83,11 @@ const ExpenseList: React.FC = React.memo(() => {
 
   return (
     <List
-      height={600} // Wysokość widocznego obszaru listy
+      height={400}
       itemCount={expenses.length}
       itemSize={ITEM_HEIGHT}
       width="100%"
+      className="list-group"
     >
       {Row}
     </List>

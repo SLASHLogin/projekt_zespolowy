@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { v4 as uuidv4 } from 'uuid'
 
 export interface Participant {
   id: string
@@ -100,7 +100,7 @@ export class AppState {
 
   // Zarządzanie uczestnikami
   addParticipant(name: string): Participant {
-    const id = typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID()
+    const id = uuidv4()
     const participant: Participant = { id, name }
     this.participants.push(participant)
     this.saveToLocalStorage()
@@ -120,7 +120,7 @@ export class AppState {
 
   // Zarządzanie wydatkami
   addExpense(expense: Omit<Expense, 'id' | 'date'>): Expense {
-    const id = typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID()
+    const id = uuidv4()
     const date = new Date().toISOString()
     const newExpense: Expense = { ...expense, id, date }
     this.expenses.push(newExpense)
@@ -345,7 +345,7 @@ export class AppState {
     }
 
     const payment: Payment = {
-      id: typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID(),
+      id: uuidv4(),
       from,
       to,
       amount,

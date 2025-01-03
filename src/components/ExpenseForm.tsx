@@ -52,20 +52,20 @@ const ExpenseForm = () => {
       {/* Kwota i waluta */}
       <div className="mb-3">
         <label htmlFor="amount" className="form-label">Kwota</label>
-        <div className="input-group">
+        <div className="input-group flex-wrap">
           <input
             type="number"
-            className="form-control"
+            className="form-control w-50"
             id="amount"
             value={formData.amount}
             onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
             required
             min="0"
             step="0.01"
+            placeholder="0.00"
           />
           <select
-            className="form-select"
-            style={{ maxWidth: '120px' }}
+            className="form-select w-auto"
             value={formData.currency}
             onChange={(e) => setFormData({ ...formData, currency: e.target.value })}
             required
@@ -110,8 +110,10 @@ const ExpenseForm = () => {
       {/* Beneficjenci */}
       <div className="mb-3">
         <label className="form-label">Beneficjenci</label>
-        {participants.map((participant) => (
-          <div className="form-check" key={participant.id}>
+        <div className="row row-cols-2 row-cols-sm-3 g-2">
+          {participants.map((participant) => (
+          <div className="col" key={participant.id}>
+            <div className="form-check">
             <input
               className="form-check-input"
               type="checkbox"
@@ -127,8 +129,10 @@ const ExpenseForm = () => {
             <label className="form-check-label" htmlFor={`beneficiary-${participant.id}`}>
               {participant.name}
             </label>
+            </div>
           </div>
         ))}
+        </div>
         <div className="invalid-feedback">
           Proszę wybrać co najmniej jednego beneficjenta
         </div>
@@ -150,7 +154,7 @@ const ExpenseForm = () => {
         </div>
       </div>
 
-      <button type="submit" className="btn btn-primary">
+      <button type="submit" className="btn btn-primary w-100">
         Dodaj wydatek
       </button>
     </form>

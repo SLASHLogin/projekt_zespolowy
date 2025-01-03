@@ -80,8 +80,10 @@ const ExpenseItem = memo(({
           ))}
         </select>
         <div className="mb-2">
-          {participants.map(participant => (
-            <div className="form-check" key={participant.id}>
+          <div className="row row-cols-2 row-cols-sm-3 g-2">
+            {participants.map(participant => (
+              <div className="col" key={participant.id}>
+                <div className="form-check">
               <input
                 type="checkbox"
                 className="form-check-input"
@@ -100,8 +102,10 @@ const ExpenseItem = memo(({
               <label className="form-check-label" htmlFor={`edit-beneficiary-${participant.id}`}>
                 {participant.name}
               </label>
-            </div>
-          ))}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
         <input
           type="text"
@@ -125,44 +129,48 @@ const ExpenseItem = memo(({
 
   return (
     <>
-      <div className="d-flex justify-content-between align-items-start mb-2">
-        <div>
-          <h6 className="mb-1">{expense.description}</h6>
-          <p className="mb-1">
-            <strong>
-              {expense.amount} {expense.currency}
-            </strong>
-          </p>
-          <small className="text-muted">
-            Płatnik: {participants.find(p => p.id === expense.payer)?.name}
-          </small>
-        </div>
-        <div className="btn-group">
-          <button
-            className="btn btn-outline-primary btn-sm"
-            onClick={handleEdit}
-          >
-            Edytuj
-          </button>
-          <button
-            className="btn btn-outline-danger btn-sm"
-            onClick={handleDelete}
-          >
-            Usuń
-          </button>
+      <div className="mb-2">
+        <div className="row g-2">
+          <div className="col-12 col-sm">
+            <h6 className="mb-1 text-break">{expense.description}</h6>
+            <p className="mb-1">
+              <strong>
+                {expense.amount} {expense.currency}
+              </strong>
+            </p>
+            <small className="text-muted d-block text-truncate">
+              Płatnik: {participants.find(p => p.id === expense.payer)?.name}
+            </small>
+          </div>
+          <div className="col-12 col-sm-auto">
+            <div className="d-flex gap-2 justify-content-start justify-content-sm-end">
+              <button
+                className="btn btn-outline-primary"
+                onClick={handleEdit}
+              >
+                Edytuj
+              </button>
+              <button
+                className="btn btn-outline-danger"
+                onClick={handleDelete}
+              >
+                Usuń
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="mb-2">
-        <small className="text-muted">
+      <div>
+        <small className="text-muted d-block text-break mb-1">
           Beneficjenci:{' '}
           {expense.beneficiaries
             .map(id => participants.find(p => p.id === id)?.name)
             .join(', ')}
         </small>
+        <small className="text-muted d-block">
+          Data: {formatDate(expense.date)}
+        </small>
       </div>
-      <small className="text-muted d-block">
-        Data: {formatDate(expense.date)}
-      </small>
     </>
   );
 });
