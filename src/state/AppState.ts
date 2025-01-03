@@ -383,13 +383,119 @@ export class AppState {
   importState(jsonData: string): void {
     try {
       const data = JSON.parse(jsonData)
-      this.participants = data.participants || []
-      this.expenses = data.expenses || []
-      this.currencies = data.currencies || this.currencies
+
+      // Walidacja struktury danych
+      if (typeof data !== 'object' || data === null) {
+        throw new Error('Nieprawidłowy format danych')
+      }
+
+      // Walidacja i konwersja uczestników
+      if (Array.isArray(data.participants)) {
+        this.participants = data.participants.filter((p: unknown) => {
+          if (typeof p !== 'object' || p === null) return false
+          const participant = p as Record<string, unknown>
+          return typeof participant.id === 'string' && participant.id.length > 0 &&
+                 typeof participant.name === 'string' && participant.name.length > 0
+        }) as Participant[]
+      }
+
+      // Walidacja i konwersja wydatków
+      if (Array.isArray(data.expenses)) {
+        this.expenses = data.expenses.filter((e: unknown) => {
+          if (typeof e !== 'object' || e === null) return false
+          const expense = e as Record<string, unknown>
+
+          // Walidacja wymaganych pól
+          if (!expense.id || !expense.amount || !expense.currency || !expense.payer || 
+              !expense.beneficiaries || !expense.description || !expense.date) {
+            return false
+          }
+
+          // Konwersja i walidacja kwoty
+          const amount = Number(expense.amount)
+          if (isNaN(amount) || amount <= 0) return false
+
+          // Walidacja daty
+          try {
+            const date = new Date(expense.date as string)
+            if (isNaN(date.getTime())) return false
+            expense.date = date.toISOString() // Normalizacja formatu daty
+          } catch {
+            return false
+          }
+
+          // Walidacja beneficjentów
+          if (!Array.isArray(expense.beneficiaries) || expense.beneficiaries.length === 0) {
+            return false
+          }
+
+          // Konwersja kwoty na number
+          expense.amount = amount
+
+          return true
+        }) as Expense[]
+      }
+
+      // Walidacja i konwersja walut
+      if (Array.isArray(data.currencies)) {
+        const validCurrencies = data.currencies.filter((c: unknown) => {
+          if (typeof c !== 'object' || c === null) return false
+          const currency = c as Record<string, unknown>
+
+          // Walidacja wymaganych pól
+          if (!currency.code || !currency.symbol || !currency.name || 
+              typeof currency.exchangeRate !== 'number') {
+            return false
+          }
+
+          // Walidacja kursu wymiany
+          return this.validateExchangeRate(currency.exchangeRate)
+        }) as Currency[]
+
+        // Aktualizuj tylko jeśli są poprawne waluty
+        if (validCurrencies.length > 0) {
+          this.currencies = validCurrencies
+        }
+      }
+
+      // Walidacja i konwersja płatności
+      if (Array.isArray(data.payments)) {
+        this.payments = data.payments.filter((p: unknown) => {
+          if (typeof p !== 'object' || p === null) return false
+          const payment = p as Record<string, unknown>
+
+          // Walidacja wymaganych pól
+          if (!payment.id || !payment.from || !payment.to || 
+              !payment.amount || !payment.currency || !payment.date) {
+            return false
+          }
+
+          // Konwersja i walidacja kwoty
+          const amount = Number(payment.amount)
+          if (isNaN(amount) || amount <= 0) return false
+
+          // Walidacja daty
+          try {
+            const date = new Date(payment.date as string)
+            if (isNaN(date.getTime())) return false
+            payment.date = date.toISOString() // Normalizacja formatu daty
+          } catch {
+            return false
+          }
+
+          // Konwersja kwoty na number
+          payment.amount = amount
+
+          return true
+        }) as Payment[]
+      }
+
       this.invalidateCache()
       this.saveToLocalStorage()
+      this.notifySubscribers()
     } catch (error) {
       console.error('Błąd podczas importowania danych:', error)
+      throw new Error('Błąd podczas importowania danych')
     }
   }
 

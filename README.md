@@ -123,7 +123,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Optymalizacja wydajności renderowania komponentów
 - [x] Implementacja mechanizmu buforowania obliczeń
 - [ ] Testowanie responsywności na różnych urządzeniach
-- [ ] Testowanie obsługi różnych formatów plików i danych
+- [x] Testowanie obsługi różnych formatów plików i danych
 - [ ] Sprawdzenie poprawności obliczeń dla różnych scenariuszy
 - [x] Testowanie wydajności dla dużej liczby transakcji
 

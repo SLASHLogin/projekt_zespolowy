@@ -8,7 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "test:performance": "tsx src/utils/runPerformanceTests.ts"
+    "test:performance": "tsx src/utils/runPerformanceTests.ts",
+    "test:import": "tsx src/utils/importExportTest.ts",
+    "test": "npm run test:performance && npm run test:import"
   },
   "dependencies": {
     "@types/react-window": "^1.8.8",
