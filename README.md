@@ -129,12 +129,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 
 ### 5. Dodatkowe funkcjonalności
 
-- [ ] Dodanie eksportu rozliczeń do PDF
-- [ ] Implementacja historii zmian
-- [ ] Dodanie możliwości kategoryzacji wydatków
-- [ ] Implementacja widoku statystyk wydatków
-- [ ] Dodanie możliwości podziału wydatku na nierówne części
-- [ ] Implementacja prostego systemu tagów dla wydatków
+- [x] Dodanie eksportu rozliczeń do PDF
 
 ### 6. Dokumentacja i wdrożenie
 
@@ -148,8 +143,4 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 ### 7. Optymalizacja UX
 
 - [ ] Dodanie komunikatów o błędach i potwierdzeniach
-- [ ] Implementacja systemu podpowiedzi (tooltipów)
-- [ ] Dodanie skrótów klawiaturowych
-- [ ] Optymalizacja formularzy pod kątem UX
-- [ ] Implementacja auto-zapisu
 - [ ] Dodanie trybu ciemnego/jasnego
