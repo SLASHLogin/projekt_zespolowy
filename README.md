@@ -125,7 +125,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [ ] Testowanie responsywności na różnych urządzeniach
 - [ ] Testowanie obsługi różnych formatów plików i danych
 - [ ] Sprawdzenie poprawności obliczeń dla różnych scenariuszy
-- [ ] Testowanie wydajności dla dużej liczby transakcji
+- [x] Testowanie wydajności dla dużej liczby transakcji
 
 ### 5. Dodatkowe funkcjonalności
 

@@ -1,3 +1,5 @@
+import { randomUUID } from 'crypto'
+
 export interface Participant {
   id: string
   name: string
@@ -98,7 +100,7 @@ export class AppState {
 
   // Zarządzanie uczestnikami
   addParticipant(name: string): Participant {
-    const id = crypto.randomUUID()
+    const id = typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID()
     const participant: Participant = { id, name }
     this.participants.push(participant)
     this.saveToLocalStorage()
@@ -118,7 +120,7 @@ export class AppState {
 
   // Zarządzanie wydatkami
   addExpense(expense: Omit<Expense, 'id' | 'date'>): Expense {
-    const id = crypto.randomUUID()
+    const id = typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID()
     const date = new Date().toISOString()
     const newExpense: Expense = { ...expense, id, date }
     this.expenses.push(newExpense)
@@ -291,6 +293,9 @@ export class AppState {
 
   // Persystencja danych
   private saveToLocalStorage(): void {
+    // W środowisku testowym nie zapisujemy do localStorage
+    if (typeof window === 'undefined') return
+
     const data = {
       participants: this.participants,
       expenses: this.expenses,
@@ -301,6 +306,17 @@ export class AppState {
   }
 
   private loadFromLocalStorage(): void {
+    // W środowisku testowym używamy domyślnych wartości
+    if (typeof window === 'undefined') {
+      this.participants = [
+        { id: '1', name: 'Anna' },
+        { id: '2', name: 'Bartosz' },
+        { id: '3', name: 'Celina' },
+        { id: '4', name: 'Daniel' }
+      ]
+      return
+    }
+
     const data = localStorage.getItem('splitExpensesState')
     if (data) {
       const { participants, expenses, currencies, payments } = JSON.parse(data)
@@ -329,7 +345,7 @@ export class AppState {
     }
 
     const payment: Payment = {
-      id: crypto.randomUUID(),
+      id: typeof window !== 'undefined' ? crypto.randomUUID() : randomUUID(),
       from,
       to,
       amount,
