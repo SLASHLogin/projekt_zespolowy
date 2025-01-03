@@ -252,6 +252,7 @@ export class AppState {
     const currency = this.currencies.find(c => c.code === code)
     if (currency) {
       currency.exchangeRate = rate
+      this.invalidateCache() // Dodane wywołanie invalidateCache
       this.saveToLocalStorage()
       this.notifySubscribers()
     }

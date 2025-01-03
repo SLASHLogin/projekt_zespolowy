@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test:performance": "tsx src/utils/runPerformanceTests.ts",
     "test:import": "tsx src/utils/importExportTest.ts",
-    "test": "npm run test:performance && npm run test:import"
+    "test:edge": "tsx src/utils/runEdgeCaseTests.ts",
+    "test": "npm run test:performance && npm run test:import && npm run test:edge"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.1.6",

@@ -124,7 +124,7 @@ Stworzenie lekkiej, łatwej w użyciu aplikacji webowej do zarządzania wspólny
 - [x] Implementacja mechanizmu buforowania obliczeń
 - [ ] Testowanie responsywności na różnych urządzeniach
 - [x] Testowanie obsługi różnych formatów plików i danych
-- [ ] Sprawdzenie poprawności obliczeń dla różnych scenariuszy
+- [x] Sprawdzenie poprawności obliczeń dla różnych scenariuszy
 - [x] Testowanie wydajności dla dużej liczby transakcji
 
 ### 5. Dodatkowe funkcjonalności
