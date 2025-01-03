@@ -6,6 +6,9 @@ import ExpenseSummary from './components/ExpenseSummary.tsx'
 import { CurrencyRateModal } from './components/CurrencyRateModal'
 import { PaymentForm } from './components/PaymentForm'
 import { AppProvider, useAppState } from './state/AppContext'
+import { DateRangeModal } from './components/DateRangeModal'
+import { ExpenseReport } from './components/ExpenseReport'
+import { PDFDownloadLink } from '@react-pdf/renderer'
 
 interface ResetModalProps {
   show: boolean;
@@ -17,40 +20,55 @@ const ResetModal = memo<ResetModalProps>(({ show, onClose, onReset }) => {
   if (!show) return null;
   
   return (
-    <div className="modal show d-block" tabIndex={-1}>
-      <div className="modal-dialog">
-        <div className="modal-content">
-          <div className="modal-header">
-            <h5 className="modal-title">Potwierdź resetowanie</h5>
-            <button 
-              type="button" 
-              className="btn-close" 
-              onClick={onClose}
-            ></button>
-          </div>
-          <div className="modal-body">
-            <p>Czy na pewno chcesz zresetować wszystkie rozliczenia? Ta operacja usunie wszystkie wydatki i płatności, ale zachowa uczestników i kursy walut.</p>
-            <p className="text-danger mb-0">Tej operacji nie można cofnąć!</p>
-          </div>
-          <div className="modal-footer">
-            <button 
-              type="button" 
-              className="btn btn-secondary" 
-              onClick={onClose}
-            >
-              Anuluj
-            </button>
-            <button 
-              type="button" 
-              className="btn btn-danger" 
-              onClick={onReset}
-            >
-              Resetuj
-            </button>
+    <div className="modal-wrapper">
+      <div className="modal show d-block" tabIndex={-1} style={{ zIndex: 1050 }}>
+        <div className="modal-dialog">
+          <div className="modal-content">
+            <div className="modal-header">
+              <h5 className="modal-title">Potwierdź resetowanie</h5>
+              <button 
+                type="button" 
+                className="btn-close" 
+                onClick={onClose}
+              ></button>
+            </div>
+            <div className="modal-body">
+              <p>Czy na pewno chcesz zresetować wszystkie rozliczenia? Ta operacja usunie wszystkie wydatki i płatności, ale zachowa uczestników i kursy walut.</p>
+              <p className="text-danger mb-0">Tej operacji nie można cofnąć!</p>
+            </div>
+            <div className="modal-footer">
+              <button 
+                type="button" 
+                className="btn btn-secondary" 
+                onClick={onClose}
+              >
+                Anuluj
+              </button>
+              <button 
+                type="button" 
+                className="btn btn-danger" 
+                onClick={onReset}
+              >
+                Resetuj
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div className="modal-backdrop fade show"></div>
+      <div 
+        className="modal-backdrop show" 
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#000',
+          opacity: 0.5,
+          zIndex: 1040 
+        }} 
+        onClick={onClose}
+      />
     </div>
   );
 });
@@ -64,11 +82,26 @@ const PaymentModal = memo<PaymentModalProps>(({ show, onClose }) => {
   if (!show) return null;
   
   return (
-    <div className="modal show d-block" tabIndex={-1}>
-      <div className="modal-dialog">
-        <PaymentForm onClose={onClose} />
+    <div className="modal-wrapper">
+      <div className="modal show d-block" tabIndex={-1} style={{ zIndex: 1050 }}>
+        <div className="modal-dialog">
+          <PaymentForm onClose={onClose} />
+        </div>
       </div>
-      <div className="modal-backdrop fade show"></div>
+      <div 
+        className="modal-backdrop show" 
+        style={{ 
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: '#000',
+          opacity: 0.5,
+          zIndex: 1040 
+        }} 
+        onClick={onClose}
+      />
     </div>
   );
 });
@@ -77,6 +110,11 @@ const AppContent = memo(() => {
   const [showCurrencyModal, setShowCurrencyModal] = useState(false);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
+  const [showDateRangeModal, setShowDateRangeModal] = useState(false);
+  const [reportDates, setReportDates] = useState<{
+    startDate?: Date;
+    endDate?: Date;
+  }>({});
   const appState = useAppState();
 
   const handleExport = useCallback(() => {
@@ -116,6 +154,12 @@ const AppContent = memo(() => {
   const handleClosePaymentModal = useCallback(() => setShowPaymentModal(false), []);
   const handleCloseCurrencyModal = useCallback(() => setShowCurrencyModal(false), []);
   const handleCloseResetModal = useCallback(() => setShowResetModal(false), []);
+  const handleCloseDateRangeModal = useCallback(() => setShowDateRangeModal(false), []);
+  const handleShowDateRangeModal = useCallback(() => setShowDateRangeModal(true), []);
+  
+  const handleGenerateReport = useCallback((startDate?: Date, endDate?: Date) => {
+    setReportDates({ startDate, endDate });
+  }, []);
   const handleReset = useCallback(() => {
     appState.resetState();
     setShowResetModal(false);
@@ -157,6 +201,28 @@ const AppContent = memo(() => {
                   >
                     Kursy walut
                   </button>
+                  <button 
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={handleShowDateRangeModal}
+                  >
+                    Wybierz zakres dat
+                  </button>
+                  {reportDates.startDate !== undefined && (
+                    <PDFDownloadLink
+                      document={
+                        <AppProvider>
+                          <ExpenseReport
+                            startDate={reportDates.startDate}
+                            endDate={reportDates.endDate}
+                          />
+                        </AppProvider>
+                      }
+                      fileName={`rozliczenia-${new Date().toISOString().split('T')[0]}.pdf`}
+                      className="btn btn-outline-light btn-md btn-md-lg"
+                    >
+                      <span>Generuj PDF</span>
+                    </PDFDownloadLink>
+                  )}
                   <button 
                     className="btn btn-outline-light btn-md btn-md-lg"
                     onClick={handleShowResetModal}
@@ -236,6 +302,12 @@ const AppContent = memo(() => {
           show={showResetModal}
           onClose={handleCloseResetModal}
           onReset={handleReset}
+        />
+
+        <DateRangeModal
+          isOpen={showDateRangeModal}
+          onClose={handleCloseDateRangeModal}
+          onGenerate={handleGenerateReport}
         />
       </div>
   )

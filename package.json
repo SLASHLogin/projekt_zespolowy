@@ -13,6 +13,7 @@
     "test": "npm run test:performance && npm run test:import"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.1.6",
     "@types/react-window": "^1.8.8",
     "@types/uuid": "^10.0.0",
     "bootstrap": "^5.3.3",
