@@ -100,15 +100,73 @@ export class AppState {
 
   // Zarządzanie uczestnikami
   addParticipant(name: string): Participant {
+    if (!name || name.trim().length === 0) {
+      throw new Error('Nazwa uczestnika nie może być pusta')
+    }
+    if (this.participants.some(p => p.name === name.trim())) {
+      throw new Error('Uczestnik o takiej nazwie już istnieje')
+    }
+
     const id = uuidv4()
-    const participant: Participant = { id, name }
+    const participant: Participant = { id, name: name.trim() }
     this.participants.push(participant)
+
+    // Dodaj domyślnych uczestników, jeśli nie ma żadnych
+    if (this.participants.length === 1) {
+      this.participants = [
+        ...this.participants,
+        { id: '1', name: 'Anna' },
+        { id: '2', name: 'Bartosz' },
+        { id: '3', name: 'Celina' },
+        { id: '4', name: 'Daniel' }
+      ]
+    }
+
     this.saveToLocalStorage()
     this.notifySubscribers()
     return participant
   }
 
+  updateParticipant(id: string, name: string): void {
+    const participant = this.participants.find(p => p.id === id)
+    if (!participant) {
+      throw new Error('Nie znaleziono uczestnika')
+    }
+    if (!name || name.trim().length === 0) {
+      throw new Error('Nazwa uczestnika nie może być pusta')
+    }
+    if (this.participants.some(p => p.id !== id && p.name === name.trim())) {
+      throw new Error('Uczestnik o takiej nazwie już istnieje')
+    }
+
+    participant.name = name.trim()
+    this.saveToLocalStorage()
+    this.notifySubscribers()
+  }
+
   removeParticipant(id: string): void {
+    // Sprawdź czy uczestnik istnieje
+    const participant = this.participants.find(p => p.id === id)
+    if (!participant) {
+      throw new Error('Nie znaleziono uczestnika')
+    }
+
+    // Sprawdź czy uczestnik ma aktywne wydatki
+    const hasExpenses = this.expenses.some(e => 
+      e.payer === id || e.beneficiaries.includes(id)
+    )
+    if (hasExpenses) {
+      throw new Error('Nie można usunąć uczestnika z aktywnymi wydatkami')
+    }
+
+    // Sprawdź czy uczestnik ma aktywne płatności
+    const hasPayments = this.payments.some(p =>
+      p.from === id || p.to === id
+    )
+    if (hasPayments) {
+      throw new Error('Nie można usunąć uczestnika z aktywnymi płatnościami')
+    }
+
     this.participants = this.participants.filter(p => p.id !== id)
     this.saveToLocalStorage()
     this.notifySubscribers()

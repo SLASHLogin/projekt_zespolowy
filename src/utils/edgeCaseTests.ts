@@ -4,6 +4,76 @@ function runEdgeCaseTests() {
   console.log('Rozpoczynam testy edge cases...\n')
   
   const state = new AppState()
+
+  // Test 0: Zarządzanie użytkownikami
+  console.log('Test 0: Zarządzanie użytkownikami')
+  
+  // Test dodawania użytkownika
+  try {
+    state.addParticipant('') // Pusta nazwa
+    console.error('❌ Test walidacji pustej nazwy nie powiódł się')
+  } catch (e) {
+    console.log('✅ Poprawnie odrzucono pustą nazwę')
+  }
+
+  try {
+    state.addParticipant('Anna') // Duplikat nazwy
+    console.error('❌ Test walidacji duplikatu nazwy nie powiódł się')
+  } catch (e) {
+    console.log('✅ Poprawnie odrzucono duplikat nazwy')
+  }
+
+  const newParticipant = state.addParticipant('Ewa')
+  console.log('✅ Dodano nowego uczestnika:', newParticipant)
+
+  // Test aktualizacji nazwy
+  try {
+    state.updateParticipant('nieistniejące-id', 'Test') // Nieprawidłowe ID
+    console.error('❌ Test walidacji nieistniejącego ID nie powiódł się')
+  } catch (e) {
+    console.log('✅ Poprawnie odrzucono nieistniejące ID')
+  }
+
+  try {
+    state.updateParticipant(newParticipant.id, 'Anna') // Duplikat nazwy
+    console.error('❌ Test walidacji duplikatu nazwy przy aktualizacji nie powiódł się')
+  } catch (e) {
+    console.log('✅ Poprawnie odrzucono duplikat nazwy przy aktualizacji')
+  }
+
+  state.updateParticipant(newParticipant.id, 'Ewelina')
+  console.log('✅ Zaktualizowano nazwę uczestnika')
+
+  // Test usuwania użytkownika
+  const testParticipant = state.addParticipant('TestUser')
+  
+  // Dodaj wydatek dla użytkownika
+  const expense: Omit<Expense, 'id' | 'date'> = {
+    amount: 100,
+    currency: 'PLN',
+    payer: testParticipant.id,
+    beneficiaries: [testParticipant.id],
+    description: 'Test usuwania użytkownika'
+  }
+  state.addExpense(expense)
+
+  try {
+    state.removeParticipant(testParticipant.id) // Użytkownik z wydatkami
+    console.error('❌ Test walidacji usuwania użytkownika z wydatkami nie powiódł się')
+  } catch (e) {
+    console.log('✅ Poprawnie odrzucono usunięcie użytkownika z wydatkami')
+  }
+
+  // Usuń wydatek i spróbuj ponownie usunąć użytkownika
+  state.removeExpense(state.getExpenses()[state.getExpenses().length - 1].id)
+  try {
+    state.removeParticipant(testParticipant.id)
+    console.log('✅ Poprawnie usunięto użytkownika bez wydatków')
+  } catch (e) {
+    console.error('❌ Test usuwania użytkownika bez wydatków nie powiódł się')
+  }
+
+  console.log('\n')
   
   // Test 1: Bardzo małe kwoty
   console.log('Test 1: Bardzo małe kwoty')

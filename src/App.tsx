@@ -111,11 +111,55 @@ const AppContent = memo(() => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showResetModal, setShowResetModal] = useState(false);
   const [showDateRangeModal, setShowDateRangeModal] = useState(false);
+  const [showParticipantModal, setShowParticipantModal] = useState(false);
+  const [newParticipantName, setNewParticipantName] = useState('');
   const [reportDates, setReportDates] = useState<{
     startDate?: Date;
     endDate?: Date;
   }>({});
   const appState = useAppState();
+  const participants = appState.getParticipants();
+
+  const handleAddParticipant = () => {
+    try {
+      const newParticipant = appState.addParticipant(newParticipantName);
+      setNewParticipantName('');
+      console.log('Dodano nowego uczestnika:', newParticipant);
+    } catch (error) {
+      console.error('Błąd podczas dodawania uczestnika:', error);
+    }
+  };
+
+  const handleEditParticipant = (id: string) => {
+    const participant = participants.find(p => p.id === id);
+    if (participant) {
+      setNewParticipantName(participant.name);
+    }
+  };
+
+  const handleUpdateParticipant = () => {
+    try {
+      const participantId = participants.find(p => p.name === newParticipantName)?.id;
+      if (participantId) {
+        appState.updateParticipant(participantId, newParticipantName);
+        setNewParticipantName('');
+        console.log('Zaktualizowano uczestnika');
+      } else {
+        console.error('Nie znaleziono uczestnika o takiej nazwie');
+      }
+    } catch (error) {
+      console.error('Błąd podczas aktualizacji uczestnika:', error);
+    }
+  };
+
+  const handleRemoveParticipant = (id: string) => {
+    try {
+      appState.removeParticipant(id);
+      console.log('Usunięto uczestnika o id:', id);
+    } catch (error) {
+      console.error('Błąd podczas usuwania uczestnika:', error);
+    }
+  };
 
   const handleExport = useCallback(() => {
     const jsonString = appState.exportState();
@@ -223,17 +267,120 @@ const AppContent = memo(() => {
                       <span>Generuj PDF</span>
                     </PDFDownloadLink>
                   )}
-                  <button 
+                  <button
                     className="btn btn-outline-light btn-md btn-md-lg"
                     onClick={handleShowResetModal}
                   >
                     Resetuj rozliczenia
+                  </button>
+                  <button
+                    className="btn btn-outline-light btn-md btn-md-lg"
+                    onClick={() => setShowParticipantModal(true)}
+                  >
+                    Zarządzaj uczestnikami
                   </button>
                 </div>
               </div>
             </div>
           </div>
         </header>
+
+        {/* Modal do zarządzania uczestnikami */}
+        {showParticipantModal && (
+          <div className="modal-wrapper">
+            <div className="modal show d-block" tabIndex={-1} style={{ zIndex: 1050 }}>
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h5 className="modal-title">Zarządzaj uczestnikami</h5>
+                    <button
+                      type="button"
+                      className="btn-close"
+                      onClick={() => setShowParticipantModal(false)}
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    {/* Formularz dodawania nowego uczestnika */}
+                    <div className="mb-3">
+                      <label htmlFor="newParticipantName" className="form-label">
+                        Dodaj nowego uczestnika
+                      </label>
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="newParticipantName"
+                          placeholder="Wprowadź imię"
+                          value={newParticipantName}
+                          onChange={(e) => setNewParticipantName(e.target.value)}
+                        />
+                        <button
+                          className="btn btn-primary"
+                          onClick={handleAddParticipant}
+                          disabled={!newParticipantName.trim()}
+                        >
+                          Dodaj
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Lista istniejących uczestników */}
+                    <div>
+                      <h6>Uczestnicy:</h6>
+                      <ul className="list-group">
+                        {participants.map((participant) => (
+                          <li
+                            key={participant.id}
+                            className="list-group-item d-flex justify-content-between align-items-center"
+                          >
+                            <span>{participant.name}</span>
+                            <div>
+                              <button
+                                className="btn btn-sm btn-outline-primary me-2"
+                                onClick={() => handleEditParticipant(participant.id)}
+                              >
+                                Edytuj
+                              </button>
+                              <button
+                                className="btn btn-sm btn-outline-danger"
+                                onClick={() => handleRemoveParticipant(participant.id)}
+                              >
+                                Usuń
+                              </button>
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="modal-footer">
+                    <button
+                      type="button"
+                      className="btn btn-secondary"
+                      onClick={() => setShowParticipantModal(false)}
+                    >
+                      Zamknij
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="modal-backdrop show"
+              style={{
+                position: 'fixed',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                backgroundColor: '#000',
+                opacity: 0.5,
+                zIndex: 1040
+              }}
+              onClick={() => setShowParticipantModal(false)}
+            />
+          </div>
+        )}
 
         {/* Główny obszar roboczy */}
         <main className="flex-grow-1 py-4">
