@@ -83,7 +83,7 @@ const ExpenseList: React.FC = React.memo(() => {
 
   return (
     <List
-      height={400}
+      height={expenses.length * 200}
       itemCount={expenses.length}
       itemSize={ITEM_HEIGHT}
       width="100%"
